@@ -1,0 +1,19 @@
+@model KariyerPortal.Models.JobApplicationViewModel
+
+@{
+    ViewData["Title"] = "İlana Başvur";
+}
+
+<h2>@Model.JobTitle İlanına Başvur</h2>
+
+<form asp-action="Apply" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="JobId" />
+
+    <div class="mb-3">
+        <label asp-for="CV" class="form-label">CV Yükle</label>
+        <input asp-for="CV" class="form-control" type="file" />
+        <span asp-validation-for="CV" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Başvur</button>
+</form>

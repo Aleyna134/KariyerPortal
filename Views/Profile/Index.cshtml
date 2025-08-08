@@ -1,0 +1,132 @@
+@using KariyerPortal.Models
+@model AppUser
+
+@{
+    ViewData["Title"] = "Profilim";
+}
+<h2 class="profile-heading">@Model.AdSoyad - Özgeçmiş</h2>
+
+<!-- Profil Kartı -->
+<div class="card shadow p-4">
+    <div class="row">
+        <!-- Profil Fotoğrafı -->
+        <div class="col-md-4 text-center border-end">
+            <img src="~/uploads/@(Model.ProfileImagePath ?? "default-profile.png")" class="img-fluid rounded-circle mb-3" style="max-width: 200px;" alt="Profil Fotoğrafı" />
+        </div>
+
+        <!-- Bilgiler -->
+        <div class="col-md-8">
+            <h4>@Model.AdSoyad</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><i class="bi bi-calendar3 me-2"></i> @Model.BirthYear</p>
+                    <p><i class="bi bi-geo-alt me-2"></i> @Model.City - @Model.District</p>
+                </div>
+                <div class="col-md-6">
+                    <p><i class="bi bi-envelope me-2"></i>@Model.Email</p>
+                    <p><i class="bi bi-telephone me-2"></i>@Model.Phone</p>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button id="editBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Düzenle
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PROFİL DÜZENLEME OVERLAY -->
+<div id="editFormOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+     style="background: rgba(0, 0, 0, 0.7); z-index: 1050;">
+    <div class="container h-100 d-flex justify-content-center align-items-center">
+        <div class="bg-white p-4 rounded shadow" style="width: 500px;">
+            <form asp-action="Index" asp-controller="Profile" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="mb-3"><label>Ad Soyad</label><input name="AdSoyad" class="form-control" value="@Model.AdSoyad" /></div>
+                <div class="mb-3"><label>Telefon</label><input name="Phone" class="form-control" value="@Model.Phone" /></div>
+                <div class="mb-3"><label>Doğum Yılı</label><input name="BirthYear" type="number" class="form-control" value="@Model.BirthYear" /></div>
+                <div class="mb-3"><label>Şehir</label><input name="City" class="form-control" value="@Model.City" /></div>
+                <div class="mb-3"><label>İlçe</label><input name="District" class="form-control" value="@Model.District" /></div>
+                <div class="mb-3"><label>Profil Fotoğrafı</label><input type="file" name="ProfileImage" class="form-control" /></div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" id="cancelEdit" class="btn btn-outline-dark">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- TABLI YAPI -->
+<div class="container py-4">
+    <ul class="nav nav-pills mb-3" id="profile-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="about-tab" data-bs-toggle="pill" data-bs-target="#about" type="button" role="tab">Hakkımda</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="profile-tabContent">
+        <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+            <!-- BAŞLIK VE EKLE -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Hakkımda Bilgilerim</h5>
+                <button class="btn btn-sm btn-primary" id="openAboutForm">Ekle</button>
+            </div>
+
+            <!-- Hakkımda Kartları -->
+            <div class="row" id="aboutCards">
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text">Yazılım geliştirmeye ilgi duyuyorum. Özellikle .NET ve C# ile web projeleri geliştiriyorum.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HAKKIMDA EKLE OVERLAY -->
+<div id="aboutFormOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+     style="background: rgba(0, 0, 0, 0.7); z-index: 1060;">
+    <div class="container h-100 d-flex justify-content-center align-items-center">
+        <div class="bg-white p-4 rounded shadow" style="width: 500px;">
+            <form method="post" asp-action="HakkimdaEkle" asp-controller="UserDetail">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label>Hakkımda</label>
+                    <textarea name="Aciklama" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" id="cancelAbout" class="btn btn-outline-dark">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT -->
+@section Scripts {
+    <script>
+        // Profil düzenleme overlay
+        document.getElementById("editBtn")?.addEventListener("click", () => {
+            document.getElementById("editFormOverlay")?.classList.remove("d-none");
+        });
+
+        document.getElementById("cancelEdit")?.addEventListener("click", () => {
+            document.getElementById("editFormOverlay")?.classList.add("d-none");
+        });
+
+        // Hakkımda overlay
+        document.getElementById("openAboutForm")?.addEventListener("click", () => {
+            document.getElementById("aboutFormOverlay")?.classList.remove("d-none");
+        });
+
+        document.getElementById("cancelAbout")?.addEventListener("click", () => {
+            document.getElementById("aboutFormOverlay")?.classList.add("d-none");
+        });
+    </script>
+}

@@ -4884,19 +4884,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/aleyna/.nuget/packages/": {}
+    "C:\\Users\\ALEYNA\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/aleyna/KariyerPortal/KariyerPortal.csproj",
+      "projectUniqueName": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\KariyerPortal.csproj",
       "projectName": "KariyerPortal",
-      "projectPath": "/Users/aleyna/KariyerPortal/KariyerPortal.csproj",
-      "packagesPath": "/Users/aleyna/.nuget/packages/",
-      "outputPath": "/Users/aleyna/KariyerPortal/obj/",
+      "projectPath": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\KariyerPortal.csproj",
+      "packagesPath": "C:\\Users\\ALEYNA\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/aleyna/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\ALEYNA\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -4960,7 +4960,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

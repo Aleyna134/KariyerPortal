@@ -1,0 +1,27 @@
+@model IEnumerable<KariyerPortal.Models.Job>
+
+<h2>İş İlanları</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Başlık</th>
+            <th>Açıklama</th>
+            <th>Oluşturan</th>
+            <th>Oluşturulma Tarihi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model)
+        {
+            <tr>
+                <td>@job.Title</td>
+                <td>@job.Description</td>
+                <td>@job.Created.ToString("dd.MM.yyyy")</td>
+                 <td>
+                    <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-primary">Detay</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

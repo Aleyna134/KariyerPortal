@@ -1,8 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Kariyer Portalı";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-4 mb-5">
+    <h1 class="display-5 fw-bold">Kariyer Portalına Hoş Geldiniz</h1>
+    <p class="lead text-muted">Hayalinizdeki işi bulmak için doğru yerdesiniz.</p>
+</div>
+
+<div id="mainCarousel" class="carousel slide carousel-fade mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner" style="max-height: 500px;">
+
+        <div class="carousel-item active">
+            <img src="~/images/company-representatives-reading-applicant-resume-hiring.jpg" class="d-block w-100 object-fit-cover" alt="İş 1" style="height: 500px;">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 style="color: black;">Binlerce İş Fırsatı</h5>
+                <p style="color: black;">Hayalinizdeki kariyere bir adım daha yakınsınız.</p>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="~/images/career-employment-job-work-concept.jpg" class="d-block w-100 object-fit-cover" alt="İş 2" style="height: 500px;">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 style="color: black;">Kariyerinizi Şekillendirin</h5>
+                <p style="color: black;">Yeteneklerinizi gösterebileceğiniz işleri bulun.</p>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="~/images/we-are-hiring-digital-collage.jpg" class="d-block w-100 object-fit-cover" alt="İş 3" style="height: 500px;">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 style="color: black;">İşverenlerle Buluşun</h5>
+                <p style="color: black;">CV’nizi gönderin, teklifleri değerlendirin.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Geri</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">İleri</span>
+    </button>
 </div>

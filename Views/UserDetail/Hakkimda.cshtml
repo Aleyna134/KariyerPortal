@@ -1,0 +1,44 @@
+@model KariyerPortal.Models.UserDetail
+
+@{
+    ViewData["Title"] = "Hakkımda";
+}
+
+<h2>Hakkımda</h2>
+
+<form asp-action="Hakkimda" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Cinsiyet"></label>
+        <select asp-for="Cinsiyet" class="form-select">
+            <option value="">Seçiniz</option>
+            <option value="Kadın" selected="@Model.Cinsiyet == "Kadın"">Kadın</option>
+            <option value="Erkek" selected="@Model.Cinsiyet == "Erkek"">Erkek</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Vatandaslik"></label>
+        <input asp-for="Vatandaslik" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="SurucuBelgesi"></label>
+        <select asp-for="SurucuBelgesi" class="form-select">
+            <option value="">Seçiniz</option>
+            <option value="Var" selected="@Model.SurucuBelgesi == "Var"">Var</option>
+            <option value="Yok" selected="@Model.SurucuBelgesi == "Yok"">Yok</option>
+        </select>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="EmekliMi" class="form-check-input" />
+        <label asp-for="EmekliMi" class="form-check-label">Emekli misiniz?</label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="AfettenEtkilendiMi" class="form-check-input" />
+        <label asp-for="AfettenEtkilendiMi" class="form-check-label">Afetten etkilendiniz mi?</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

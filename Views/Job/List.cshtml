@@ -1,0 +1,35 @@
+@model List<KariyerPortal.Models.JobListResponse>
+
+@{
+    ViewData["Title"] = "İş İlanları";
+}
+
+<h2 class="mb-4">İş İlanları</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Henüz yayınlanmış iş ilanı yok.</div>
+}
+else
+{
+    <div class="row">
+        @foreach (var job in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        @job.Title
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@job.Description</p>
+                        <p class="card-text">
+                            <small class="text-muted">Yayınlanma: @job.Created.ToShortDateString()</small><br />
+                            <small class="text-muted">İlan Sahibi: @job.CreatedBy</small>
+                        </p>
+                        <a href="/Job/Details/@job.Id" class="btn btn-primary btn-sm">Detay</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

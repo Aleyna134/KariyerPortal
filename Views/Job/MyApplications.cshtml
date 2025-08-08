@@ -1,0 +1,25 @@
+@model IEnumerable<KariyerPortal.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "Başvurularım";
+}
+
+<h2>Başvurularım</h2>
+
+@if (!Model.Any())
+{
+    <p>Henüz hiçbir ilana başvurmadınız.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var app in Model)
+        {
+            <li class="list-group-item">
+                <strong>@app.Job.Title</strong> <br />
+                Başvuru Tarihi: @app.AppliedAt.ToShortDateString() <br />
+                <a href="~/uploads/@app.CVPath" target="_blank">CV'yi Görüntüle</a>
+            </li>
+        }
+    </ul>
+}

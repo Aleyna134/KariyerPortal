@@ -1,0 +1,41 @@
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<h2 class="text-center mb-4">Kayıt Ol</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="Register" method="post" class="border p-4 shadow rounded bg-light">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="AdSoyad" class="form-label">Ad Soyad</label>
+                <input asp-for="AdSoyad" class="form-control" />
+                <span asp-validation-for="AdSoyad" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Şifre</label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label">Şifre Tekrar</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Kayıt Ol</button>
+        </form>
+    </div>
+</div>
