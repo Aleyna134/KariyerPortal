@@ -1,0 +1,33 @@
+﻿
+<div class="modal fade" id="addSkillModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addSkillForm" asp-action="AddSkill" asp-controller="Profile" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Yetenek Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="SkillName" class="form-label">Yetenek</label>
+                        <input type="text" name="SkillName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Level" class="form-label">Seviye</label>
+                        <select name="Level" class="form-control" required>
+                            <option value="">Seviye Seçiniz</option>
+                            <option value="Başlangıç">Başlangıç</option>
+                            <option value="Orta">Orta</option>
+                            <option value="İleri">İleri</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -14,46 +14,64 @@
         var user = await UserManager.GetUserAsync(User);
         hasApplied = DbContext.JobApplications.Any(a => a.JobId == Model.Id && a.UserId == user.Id);
     }
+
+    // Geri dönme URL'si: Admin mi kontrol et
+    string backUrl = SignInManager.IsSignedIn(User) && User.IsInRole("Admin")
+                     ? Url.Action("JobList", "Admin")   // Admin Panel'deki ilanlar
+                     : Url.Action("List", "Job");       // Normal kullanıcı için iş ilanları listesi
 }
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success mt-3">@TempData["Message"]</div>
-}
+<div class="container my-5">
 
-<div class="card my-4 shadow-sm">
-    <div class="card-header bg-info text-white">
-        <h4 class="mb-0">@Model.Title</h4>
-    </div>
-    <div class="card-body">
-        <p class="card-text">@Model.Description</p>
-        <p class="card-text text-muted">
-            <small>Yayınlanma: @Model.Created.ToShortDateString()</small><br />
-            <small>İlan Sahibi: @Model.CreatedBy</small>
-        </p>
+    @* İlan fotoğrafı *@
+    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+    {
+        <div class="text-center mb-4">
+            <img src="@Url.Content(Model.PhotoPath)" alt="İlan Fotoğrafı" class="img-fluid rounded shadow-sm" style="max-height:600px; width:auto;" />
+        </div>
+    }
 
-        <div class="text-end mt-4">
-            @if (SignInManager.IsSignedIn(User))
-            {
-                if (hasApplied)
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3>@Model.Title</h3>
+
+            @* Şirket ve detaylar *@
+            <p class="mb-2"><strong>Şirket:</strong> @Model.CompanyName</p>
+            <p class="mb-2"><strong>Lokasyon:</strong> @Model.Location</p>
+            <p class="mb-2"><strong>Çalışma Şekli:</strong> @Model.JobType</p>
+
+            <p class="card-text mt-3">@Model.Description</p>
+
+            <p class="card-text text-muted">
+                <small>Yayınlanma: @Model.Created.ToShortDateString()</small><br />
+            </p>
+
+            @* Başvuru butonu - Admin görmez *@
+            <div class="text-end mt-4">
+                @if (SignInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
                 {
-                    <span class="badge bg-secondary p-2 mt-1 d-inline-block">Başvuruldu</span>
+                    if (hasApplied)
+                    {
+                        <span class="badge bg-secondary p-2 mt-1 d-inline-block">Başvuruldu</span>
+                    }
+                    else
+                    {
+                        <a asp-controller="Job" asp-action="Apply" asp-route-id="@Model.Id" class="btn btn-primary">
+                            Başvur
+                        </a>
+                    }
                 }
-                else
+                else if (!SignInManager.IsSignedIn(User))
                 {
-                    <a asp-controller="Job" asp-action="Apply" asp-route-id="@Model.Id" class="btn btn-primary">
-                        Başvur
+                    <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-primary">
+                        Giriş Yaparak Başvur
                     </a>
                 }
-            }
-            else
-            {
-                <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-primary">
-                    Giriş Yaparak Başvur
-                </a>
-            }
-        </div>
+            </div>
 
-        <a asp-action="List" class="btn btn-link mt-3">← Geri Dön</a>
+            @* Geri dön butonu *@
+            <a class="btn btn-link mt-3" href="@(!string.IsNullOrEmpty(ViewBag.ReturnUrl) ? ViewBag.ReturnUrl : Url.Action("List"))">
+                ← Geri Dön
+            </a>
     </div>
 </div>

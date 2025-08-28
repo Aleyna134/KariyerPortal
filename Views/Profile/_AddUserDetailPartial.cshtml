@@ -1,0 +1,48 @@
+﻿
+@model KariyerPortal.Models.UserDetail
+
+<form id="addUserDetailForm" method="post" asp-action="AddUserDetail" asp-controller="Profile">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label" for="Cinsiyet">Cinsiyet</label>
+        <select name="Cinsiyet" class="form-select" required>
+            <option value="">Seçiniz</option>
+            <option value="Kadın">Kadın</option>
+            <option value="Erkek">Erkek</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="Vatandaslik">Vatandaşlık</label>
+        <input type="text" class="form-control" id="Vatandaslik" name="Vatandaslik" value="@Model.Vatandaslik" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="SurucuBelgesi">Sürücü Belgesi</label>
+        <select name="SurucuBelgesi" class="form-select">
+            <option value="">Seçiniz</option>
+            <option value="Var">Var</option>
+            <option value="Yok">Yok</option>
+        </select>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="EmekliMi" name="EmekliMi" @(Model.EmekliMi ? "checked" : "") />
+        <label class="form-check-label" for="EmekliMi">Emekli Mi?</label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="EngelDurumu" name="EngelDurumu" @(Model.EngelDurumu ? "checked" : "") />
+        <label class="form-check-label" for="EngelDurumu">Engel Durumu</label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="AfettenEtkilendiMi" name="AfettenEtkilendiMi" @(Model.AfettenEtkilendiMi ? "checked" : "") />
+        <label class="form-check-label" for="AfettenEtkilendiMi">Afetten Etkilendi Mi?</label>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

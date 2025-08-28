@@ -137,11 +137,53 @@ namespace KariyerPortal.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("KariyerPortal.Models.Job", b =>
+            modelBuilder.Entity("KariyerPortal.Models.Education", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EducationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SchoolName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Entity.Job", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CompanyLogoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -150,6 +192,15 @@ namespace KariyerPortal.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JobType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhotoPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -163,7 +214,7 @@ namespace KariyerPortal.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("KariyerPortal.Models.JobApplication", b =>
+            modelBuilder.Entity("KariyerPortal.Models.Entity.JobApplication", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,7 +245,7 @@ namespace KariyerPortal.Migrations
                     b.ToTable("JobApplications");
                 });
 
-            modelBuilder.Entity("KariyerPortal.Models.UserDetail", b =>
+            modelBuilder.Entity("KariyerPortal.Models.Identity.UserJobExperience", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,16 +253,156 @@ namespace KariyerPortal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AfettenEtkilendiMi")
-                        .HasColumnType("bit");
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserJobExperiences");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Certificate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CertificateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Institution")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Certificates");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Language", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LanguageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProficiencyLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProjectDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SkillName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.UserDetail", b =>
+                {
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("AfettenEtkilendiMi")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Cinsiyet")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("EmekliMi")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EngelDurumu")
                         .HasColumnType("bit");
 
                     b.Property<string>("SurucuBelgesi")
@@ -220,10 +411,7 @@ namespace KariyerPortal.Migrations
                     b.Property<string>("Vatandaslik")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique();
+                    b.HasKey("AppUserId");
 
                     b.ToTable("UserDetails");
                 });
@@ -331,9 +519,18 @@ namespace KariyerPortal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("KariyerPortal.Models.JobApplication", b =>
+            modelBuilder.Entity("KariyerPortal.Models.Education", b =>
                 {
-                    b.HasOne("KariyerPortal.Models.Job", "Job")
+                    b.HasOne("KariyerPortal.Models.AppUser", null)
+                        .WithMany("Educations")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Entity.JobApplication", b =>
+                {
+                    b.HasOne("KariyerPortal.Models.Entity.Job", "Job")
                         .WithMany("Applications")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -348,6 +545,55 @@ namespace KariyerPortal.Migrations
                     b.Navigation("Job");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Identity.UserJobExperience", b =>
+                {
+                    b.HasOne("KariyerPortal.Models.AppUser", "User")
+                        .WithMany("UserJobExperiences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Certificate", b =>
+                {
+                    b.HasOne("KariyerPortal.Models.AppUser", null)
+                        .WithMany("Certificates")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Language", b =>
+                {
+                    b.HasOne("KariyerPortal.Models.AppUser", "AppUser")
+                        .WithMany("Languages")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Project", b =>
+                {
+                    b.HasOne("KariyerPortal.Models.AppUser", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KariyerPortal.Models.Profile.Skill", b =>
+                {
+                    b.HasOne("KariyerPortal.Models.AppUser", null)
+                        .WithMany("Skills")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("KariyerPortal.Models.UserDetail", b =>
@@ -414,11 +660,22 @@ namespace KariyerPortal.Migrations
 
             modelBuilder.Entity("KariyerPortal.Models.AppUser", b =>
                 {
-                    b.Navigation("UserDetail")
-                        .IsRequired();
+                    b.Navigation("Certificates");
+
+                    b.Navigation("Educations");
+
+                    b.Navigation("Languages");
+
+                    b.Navigation("Projects");
+
+                    b.Navigation("Skills");
+
+                    b.Navigation("UserDetail");
+
+                    b.Navigation("UserJobExperiences");
                 });
 
-            modelBuilder.Entity("KariyerPortal.Models.Job", b =>
+            modelBuilder.Entity("KariyerPortal.Models.Entity.Job", b =>
                 {
                     b.Navigation("Applications");
                 });

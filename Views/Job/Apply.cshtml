@@ -1,19 +1,47 @@
-@model KariyerPortal.Models.JobApplicationViewModel
+@using KariyerPortal.Models.ViewModel
+@model JobApplicationViewModel
 
 @{
     ViewData["Title"] = "İlana Başvur";
 }
 
-<h2>@Model.JobTitle İlanına Başvur</h2>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-<form asp-action="Apply" method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="JobId" />
+            @* İlan Kartı *@
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">@Model.JobTitle</h4>
+                </div>
+                <div class="card-body">
+                    @* Şirket, lokasyon, iş tipi gibi bilgileri ekle *@
+                    <p><strong>Şirket:</strong> @Model.CompanyName</p>
+                    <p><strong>Lokasyon:</strong> @Model.Location</p>
+                    <p><strong>Çalışma Şekli:</strong> @Model.JobType</p>
+                </div>
+            </div>
 
-    <div class="mb-3">
-        <label asp-for="CV" class="form-label">CV Yükle</label>
-        <input asp-for="CV" class="form-control" type="file" />
-        <span asp-validation-for="CV" class="text-danger"></span>
+            @* Başvuru Formu *@
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Başvurunuzu Gönderin</h5>
+                    <p class="text-muted mb-4">Başvurunuz gönderildikten sonra ilan sahibi sizinle iletişime geçecektir.</p>
+
+                    <form asp-action="Apply" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="JobId" />
+
+                        <div class="mb-3">
+                            <label asp-for="CV" class="form-label">CV Yükle</label>
+                            <input asp-for="CV" class="form-control form-control-lg" type="file" />
+                            <span asp-validation-for="CV" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100">Başvuruyu Gönder</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <button type="submit" class="btn btn-primary">Başvur</button>
-</form>
+</div>

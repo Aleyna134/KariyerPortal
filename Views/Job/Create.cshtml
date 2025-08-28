@@ -4,23 +4,54 @@
     ViewData["Title"] = "Yeni İş İlanı";
 }
 
-<h2 class="mb-4">Yeni İş İlanı Oluştur</h2>
+<div class="container">
+    <h2 class="mb-4">Yeni İş İlanı Oluştur</h2>
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">İlan Başlığı</label>
+            <input asp-for="Title" class="form-control" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="CompanyName" class="form-label">Şirket Adı</label>
+            <input asp-for="CompanyName" class="form-control" />
+        </div>
 
-    <button type="submit" class="btn btn-primary">İlanı Yayınla</button>
-</form>
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label">Lokasyon</label>
+            <input asp-for="Location" class="form-control" placeholder="Şehir / İlçe" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="JobType" class="form-label">Çalışma Şekli</label>
+            <select asp-for="JobType" class="form-select">
+                <option value="">Seçiniz</option>
+                <option value="Tam Zamanlı">Tam Zamanlı</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Staj">Staj</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Açıklama</label>
+            <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CompanyLogo" class="form-label">Şirket Logosu</label>
+            <input asp-for="CompanyLogo" type="file" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Photo" class="form-label">İlan Fotoğrafı</label>
+            <input asp-for="Photo" type="file" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">İlanı Yayınla</button>
+    </form>
+
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -1,25 +1,57 @@
-@model IEnumerable<KariyerPortal.Models.JobApplication>
+@using KariyerPortal.Models.Entity
+@model IEnumerable<JobApplication>
 
 @{
     ViewData["Title"] = "Başvurularım";
 }
 
-<h2>Başvurularım</h2>
+<div class="container my-5">
+    <h2 class="mb-4">Başvurularım</h2>
 
-@if (!Model.Any())
-{
-    <p>Henüz hiçbir ilana başvurmadınız.</p>
-}
-else
-{
-    <ul class="list-group">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Henüz hiçbir ilana başvurmadınız.</div>
+    }
+    else
+    {
         @foreach (var app in Model)
         {
-            <li class="list-group-item">
-                <strong>@app.Job.Title</strong> <br />
-                Başvuru Tarihi: @app.AppliedAt.ToShortDateString() <br />
-                <a href="~/uploads/@app.CVPath" target="_blank">CV'yi Görüntüle</a>
-            </li>
+            <div class="card shadow-sm mb-3">
+                <div class="row g-0">
+                    @* Sol kısım: Şirket logosu *@
+                    <div class="col-md-2 d-flex align-items-center justify-content-center bg-light p-2">
+                        @if (!string.IsNullOrEmpty(app.Job.CompanyLogoPath))
+                        {
+                            <img src="@Url.Content(app.Job.CompanyLogoPath)" alt="Şirket Logosu" class="img-fluid rounded" style="max-height:80px; object-fit:contain;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted small">Logo Yok</span>
+                        }
+                    </div>
+
+                    @* Sağ kısım: Bilgiler ve butonlar *@
+                    <div class="col-md-10">
+                        <div class="card-body">
+                            <h5 class="card-title">@app.Job.Title</h5>
+                            <p class="card-text mb-1"><strong>Şirket:</strong> @app.Job.CompanyName</p>
+                            <p class="card-text mb-1"><strong>Lokasyon:</strong> @app.Job.Location</p>
+                            <p class="card-text mb-1"><strong>Çalışma Şekli:</strong> @app.Job.JobType</p>
+                            <p class="card-text text-muted mb-2">Başvuru Tarihi: @app.AppliedAt.ToShortDateString()</p>
+
+                            <div class="d-flex mt-2">
+                                <a href="~/uploads/@app.CVPath" target="_blank" class="btn btn-secondary btn-sm me-2">
+                                    CV'yi Görüntüle
+                                </a>
+       
+                         <a asp-controller="Job" asp-action="Details" asp-route-id="@app.JobId" asp-route-returnUrl="@Url.Action("MyApplications", "Job")" class="btn btn-warning btn-sm"">
+                                    Detaylar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </ul>
-}
+    }
+</div>

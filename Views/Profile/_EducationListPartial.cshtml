@@ -1,0 +1,37 @@
+﻿@model IEnumerable<KariyerPortal.Models.Education>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Derece</th>
+                <th>Okul / Üniversite</th>
+                <th>Bölüm</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var edu in Model)
+            {
+                <tr>
+                    <td>@edu.EducationType</td>
+                    <td>@edu.SchoolName</td>
+                    <td>@edu.Department</td>
+                    <td>@edu.StartDate?.ToString("dd.MM.yyyy")</td>
+                    <td>@edu.EndDate?.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm deleteEducationBtn" data-id="@edu.Id">Sil</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Henüz eğitim eklenmemiş.</p>
+}
+

@@ -34,7 +34,7 @@ public static class IdentityDataSeeder
          {
                  UserName = "admin",
                  Email = adminEmail,
-                  AdSoyad = "Admin Kullanıcı"
+                  AdSoyad = "Admin"
              };
              await userManager.CreateAsync(adminUser, "Admin123!");
              await userManager.AddToRoleAsync(adminUser, "Admin");

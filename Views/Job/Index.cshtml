@@ -1,24 +1,37 @@
-@model IEnumerable<KariyerPortal.Models.Job>
+@using KariyerPortal.Models.Entity
+@model IEnumerable<Job>
 
 <h2>İş İlanları</h2>
 
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Logo</th>
             <th>Başlık</th>
             <th>Açıklama</th>
             <th>Oluşturan</th>
             <th>Oluşturulma Tarihi</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var job in Model)
         {
             <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(job.CompanyLogoPath))
+                    {
+                        <img src="@Url.Content(job.CompanyLogoPath)" alt="Logo" width="50" height="50" />
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
                 <td>@job.Title</td>
                 <td>@job.Description</td>
                 <td>@job.Created.ToString("dd.MM.yyyy")</td>
-                 <td>
+                <td>
                     <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-primary">Detay</a>
                 </td>
             </tr>

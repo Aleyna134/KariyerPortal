@@ -1,0 +1,37 @@
+﻿@model KariyerPortal.Models.UserDetail
+
+@if (Model != null)
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Cinsiyet</th>
+            <td>@Model.Cinsiyet</td>
+        </tr>
+        <tr>
+            <th>Vatandaşlık</th>
+            <td>@Model.Vatandaslik</td>
+        </tr>
+        <tr>
+            <th>Sürücü Belgesi</th>
+            <td>@Model.SurucuBelgesi</td>
+        </tr>
+        <tr>
+            <th>Emekli Mi</th>
+            <td>@(Model.EmekliMi ? "Evet" : "Hayır")</td>
+        </tr>
+        <tr>
+            <th>Engel Durumu</th>
+            <td>@(Model.EngelDurumu ? "Evet" : "Hayır")</td>
+        </tr>
+        <tr>
+            <th>Afetten Etkilendi Mi</th>
+            <td>@(Model.AfettenEtkilendiMi ? "Evet" : "Hayır")</td>
+        </tr>
+    </table>
+}
+else
+{
+    <p>Hakkımda bilgileri henüz eklenmemiş.</p>
+}
+
+

@@ -4,32 +4,42 @@
     ViewData["Title"] = "İş İlanları";
 }
 
-<h2 class="mb-4">İş İlanları</h2>
+<div class="container my-5">
+    <h2 class="mb-4">İş İlanları</h2>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">Henüz yayınlanmış iş ilanı yok.</div>
-}
-else
-{
-    <div class="row">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Henüz yayınlanmış iş ilanı yok.</div>
+    }
+    else
+    {
         @foreach (var job in Model)
         {
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-primary text-white">
-                        @job.Title
+            <div class="card shadow-sm mb-4">
+                <div class="row g-0">
+                    @* Şirket logosu sol tarafta *@
+                    <div class="col-3 d-flex align-items-center justify-content-center p-2">
+                        @if (!string.IsNullOrEmpty(job.CompanyLogoPath))
+                        {
+                            <img src="@Url.Content(job.CompanyLogoPath)" alt="Şirket Logosu" class="img-fluid rounded" />
+                        }
+                        else
+                        {
+                            <span class="text-muted small">Logo Yok</span>
+                        }
                     </div>
-                    <div class="card-body">
-                        <p class="card-text">@job.Description</p>
-                        <p class="card-text">
-                            <small class="text-muted">Yayınlanma: @job.Created.ToShortDateString()</small><br />
-                            <small class="text-muted">İlan Sahibi: @job.CreatedBy</small>
-                        </p>
-                        <a href="/Job/Details/@job.Id" class="btn btn-primary btn-sm">Detay</a>
+                    <div class="col-9">
+                        <div class="card-body">
+                            <h5 class="card-title">@job.Title</h5>
+                            <p class="card-text mb-1"><strong>Şirket:</strong> @job.CompanyName</p>
+                            <p class="card-text mb-1"><strong>Lokasyon:</strong> @job.Location</p>
+                            <p class="card-text"><strong>Çalışma Şekli:</strong> @job.JobType</p>
+                            <p class="card-text text-muted"><small>Yayınlanma: @job.Created.ToShortDateString()</small></p>
+                            <a href="/Job/Details/@job.Id" class="btn btn-primary btn-sm">Detay</a>
+                        </div>
                     </div>
                 </div>
             </div>
         }
-    </div>
-}
+    }
+</div>

@@ -1,0 +1,27 @@
+﻿@model KariyerPortal.Models.Profile.Certificate
+
+<form id="addCertificateForm" asp-action="AddCertificate" asp-controller="Profile" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label">Sertifika Adı</label>
+        <input type="text" name="CertificateName" class="form-control" required value="@Model.CertificateName" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Düzenleyen Kurum</label>
+        <input type="text" name="Institution" class="form-control" required value="@Model.Institution" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Alış Tarihi</label>
+        <input type="date" name="IssueDate" class="form-control" required value="@Model.IssueDate.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Son Kullanma Tarihi</label>
+        <input type="date" name="ExpirationDate" class="form-control" value="@(Model.ExpirationDate?.ToString("yyyy-MM-dd"))" />
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">İptal</button>
+    </div>
+</form>

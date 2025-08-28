@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using KariyerPortal.Context;       // DbContext için
 using KariyerPortal.Models;        // Job, JobApplication ve AppUser için
+using KariyerPortal.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,5 +68,53 @@ public async Task<IActionResult> DeleteJob(Guid id)
     TempData["Message"] = "İlan başarıyla silindi.";
     return RedirectToAction(nameof(JobList));
 }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ApplicationDetail(Guid applicationId)
+        {
+            var application = await _context.JobApplications
+                .Include(a => a.User)
+                    .ThenInclude(u => u.UserJobExperiences)
+                .Include(a => a.User)
+                    .ThenInclude(u => u.Educations)
+                .Include(a => a.User)
+                    .ThenInclude(u => u.Languages)
+                .Include(a => a.User)
+                    .ThenInclude(u => u.Skills)
+                .Include(a => a.User)
+                    .ThenInclude(u => u.Certificates)
+                .Include(a => a.User)
+                    .ThenInclude(u => u.Projects)
+                .Include(a => a.User)
+                    .ThenInclude(u => u.UserDetail)
+                .FirstOrDefaultAsync(a => a.Id == applicationId);
+
+            if (application == null)
+                return NotFound();
+
+            var viewModel = new ApplicationDetailViewModel
+            {
+                UserName = application.User.UserName,
+                AdSoyad = application.User.AdSoyad,
+                City = application.User.City,
+                District = application.User.District,
+                Phone = application.User.Phone,
+                BirthYear = application.User.BirthYear,
+                CVPath = application.CVPath,
+                JobExperiences = application.User.UserJobExperiences,
+                Educations = application.User.Educations,
+                Languages = application.User.Languages,
+                Skills = application.User.Skills,
+                Certificates = application.User.Certificates,
+                Projects = application.User.Projects,
+                UserDetail = application.User.UserDetail
+            };
+
+            return View(viewModel);
+        }
+
+
+       
+
+
     }
 }

@@ -4884,24 +4884,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ALEYNA\\.nuget\\packages\\": {}
+    "C:\\Users\\ALEYNA\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\KariyerPortal.csproj",
+      "projectUniqueName": "C:\\Users\\ALEYNA\\Source\\Repos\\KariyerPortal\\KariyerPortal.csproj",
       "projectName": "KariyerPortal",
-      "projectPath": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\KariyerPortal.csproj",
+      "projectPath": "C:\\Users\\ALEYNA\\Source\\Repos\\KariyerPortal\\KariyerPortal.csproj",
       "packagesPath": "C:\\Users\\ALEYNA\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\obj\\",
+      "outputPath": "C:\\Users\\ALEYNA\\Source\\Repos\\KariyerPortal\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\ALEYNA\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\ALEYNA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

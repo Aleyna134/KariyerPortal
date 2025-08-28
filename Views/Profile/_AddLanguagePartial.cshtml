@@ -1,0 +1,21 @@
+﻿@model KariyerPortal.Models.Profile.Language
+
+<form id="addLanguageForm" asp-action="AddLanguage" asp-controller="Profile" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label class="form-label">Dil Adı</label>
+        <input asp-for="LanguageName" class="form-control" />
+        <span asp-validation-for="LanguageName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Seviye</label>
+        <select asp-for="ProficiencyLevel" class="form-control">
+            <option value="Başlangıç">Başlangıç</option>
+            <option value="Orta">Orta</option>
+            <option value="İleri">İleri</option>
+        </select>
+        <span asp-validation-for="ProficiencyLevel" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+

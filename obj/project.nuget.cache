@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "otZ/wHtelA0=",
+  "dgSpecHash": "n0NbyExuO/k=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ALEYNA\\Downloads\\KariyerPortal-20250807T193849Z-1-001\\KariyerPortal\\KariyerPortal\\KariyerPortal.csproj",
+  "projectFilePath": "C:\\Users\\ALEYNA\\Source\\Repos\\KariyerPortal\\KariyerPortal.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ALEYNA\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\ALEYNA\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

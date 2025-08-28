@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using KariyerPortal.Models.ViewModel;
+using KariyerPortal.Models.Entity;
 
 namespace KariyerPortal.Controllers
 {
@@ -22,7 +24,6 @@ namespace KariyerPortal.Controllers
             _context = context;
             _userManager = userManager;
         }
-
         // GET: Job/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -40,22 +41,61 @@ namespace KariyerPortal.Controllers
             {
                 var currentUser = await _userManager.GetUserAsync(User);
 
+                string? logoPath = null;
+                string? photoPath = null;
+
+                // wwwroot/uploads klasörünü al
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                // Şirket Logosu kaydet
+                if (job.CompanyLogo != null)
+                {
+                    var fileName = Guid.NewGuid() + Path.GetExtension(job.CompanyLogo.FileName);
+                    var filePath = Path.Combine(uploadPath, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await job.CompanyLogo.CopyToAsync(stream);
+                    }
+                    logoPath = "/uploads/" + fileName;
+                }
+
+                // Fotoğraf kaydet
+                if (job.Photo != null)
+                {
+                    var fileName = Guid.NewGuid() + Path.GetExtension(job.Photo.FileName);
+                    var filePath = Path.Combine(uploadPath, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await job.Photo.CopyToAsync(stream);
+                    }
+                    photoPath = "/uploads/" + fileName;
+                }
+
                 _context.Jobs.Add(new Job
                 {
+                    Id = Guid.NewGuid(),
+                    Title = job.Title,
+                    CompanyName = job.CompanyName,
+                    Location = job.Location,
+                    JobType = job.JobType,
+                    Description = job.Description,
                     Created = DateTime.Now,
                     CreatedBy = currentUser!.Id,
-                    Description = job.Description,
-                    Id = Guid.NewGuid(),
                     Status = 1,
-                    Title = job.Title,
+                    CompanyLogoPath = logoPath,
+                    PhotoPath = photoPath
                 });
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction("List");
+                return RedirectToAction("JobList","Admin");
             }
 
             return View(job);
         }
+
 
         // GET: Job/List
         [AllowAnonymous]
@@ -75,7 +115,12 @@ namespace KariyerPortal.Controllers
                     Description = job.Description,
                     Created = job.Created,
                     Status = job.Status,
-                    CreatedBy = user?.UserName ?? "Bilinmiyor"
+                    CreatedBy = user?.UserName ?? "Bilinmiyor",
+                    CompanyLogoPath = job.CompanyLogoPath,  // ⭐ burada ekledik
+                    CompanyName = job.CompanyName,   // ekledik
+                    Location = job.Location,         // ekledik
+                    JobType = job.JobType,            // ekledik
+
                 });
             }
 
@@ -84,7 +129,7 @@ namespace KariyerPortal.Controllers
 
         // GET: Job/Details/5
         [AllowAnonymous]
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(Guid id, string? returnUrl = null)
         {
             var job = await _context.Jobs.FindAsync(id);
             if (job == null)
@@ -98,10 +143,16 @@ namespace KariyerPortal.Controllers
                 Title = job.Title,
                 Description = job.Description,
                 Created = job.Created,
-                CreatedBy = user?.UserName ?? "Bilinmiyor"
+                CreatedBy = user?.UserName ?? "Bilinmiyor",
+                CompanyLogoPath = job.CompanyLogoPath,
+                PhotoPath = job.PhotoPath,
+                CompanyName = job.CompanyName,   // ekledik
+                Location = job.Location,         // ekledik
+                JobType = job.JobType            // ekledik
             };
+            ViewBag.ReturnUrl = returnUrl; // Geri dön linki için
 
-            ViewBag.Message = TempData["Message"]?.ToString();
+            // ViewBag.Message = TempData["Message"]?.ToString();
             return View(viewModel);
         }
 
@@ -128,7 +179,10 @@ namespace KariyerPortal.Controllers
             var viewModel = new JobApplicationViewModel
             {
                 JobId = id,
-                JobTitle = job.Title ?? ""
+                JobTitle = job.Title ?? "",
+                CompanyName = job.CompanyName,
+                Location = job.Location,
+                JobType = job.JobType
             };
 
             return View(viewModel);
@@ -197,5 +251,15 @@ namespace KariyerPortal.Controllers
 
             return View(applications);
         }
+        public async Task<IActionResult> Index()
+        {
+            var jobs = await _context.Jobs
+                .Include(j => j.Applications)
+                    .ThenInclude(a => a.User)  // ⭐ kullanıcıyı da getir
+                .ToListAsync();
+
+            return View(jobs);
+        }
+
     }
 }

@@ -1,0 +1,148 @@
+﻿@model KariyerPortal.Models.ViewModel.ApplicationDetailViewModel
+
+<div class="container mt-4">
+    <!-- Kişisel Bilgiler Kartı -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h2>@Model.AdSoyad (@Model.UserName)</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Doğum Yılı:</strong> @Model.BirthYear</p>
+            <p><strong>Şehir/İlçe:</strong> @Model.City / @Model.District</p>
+            <p><strong>Telefon:</strong> @Model.Phone</p>
+            <p>
+                <a href="~/uploads/@Model.CVPath" target="_blank" class="btn btn-secondary btn-sm">
+                    CV'yi Görüntüle
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- İş Deneyimleri Tablosu -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark-subtle text-black">
+            <h4>İş Deneyimleri</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pozisyon</th>
+                        <th>Şirket</th>
+                        <th>Başlangıç</th>
+                        <th>Bitiş</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var job in Model.JobExperiences)
+                    {
+                        <tr>
+                            <td>@job.Position</td>
+                            <td>@job.CompanyName</td>
+                            <td>@(job.StartDate.ToString("dd.MM.yyyy"))</td>
+                            <td>@(job.EndDate.HasValue? job.EndDate.Value.ToString("dd.MM.yyyy") : "Devam")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Eğitim Bilgileri Tablosu -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark-subtle text-black">
+            <h4>Eğitim Bilgileri</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Okul</th>
+                        <th>Bölüm</th>
+                        <th>Başlangıç</th>
+                        <th>Bitiş</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var edu in Model.Educations)
+                    {
+                        <tr>
+                            <td>@edu.SchoolName</td>
+                            <td>@edu.Department</td>
+                            <td>@(edu.StartDate.HasValue? edu.StartDate.Value.ToString("dd.MM.yyyy") : "Başlangıç Yok")</td>
+                            <td>@(edu.EndDate.HasValue? edu.EndDate.Value.ToString("dd.MM.yyyy") : "Devam")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Sertifikalar Tablosu -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark-subtle text-black">
+            <h4>Sertifikalar</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Sertifika</th>
+                        <th>Kurum</th>
+                        <th>Veriliş</th>
+                        <th>Süresi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cert in Model.Certificates)
+                    {
+                        <tr>
+                            <td>@cert.CertificateName</td>
+                            <td>@cert.Institution</td>
+                            <td>@cert.IssueDate.ToString("dd.MM.yyyy")</td>
+                            <td>@(cert.ExpirationDate?.ToString("dd.MM.yyyy") ?? "Süresiz")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detaylı Profil -->
+    @if (Model.UserDetail != null)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark-subtle text-black">
+                <h4>Detaylı Profil</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Cinsiyet</th>
+                        <td>@Model.UserDetail.Cinsiyet</td>
+                    </tr>
+                    <tr>
+                        <th>Vatandaşlık</th>
+                        <td>@Model.UserDetail.Vatandaslik</td>
+                    </tr>
+                    <tr>
+                        <th>Sürücü Belgesi</th>
+                        <td>@Model.UserDetail.SurucuBelgesi</td>
+                    </tr>
+                    <tr>
+                        <th>Emekli Mi</th>
+                        <td>@(Model.UserDetail.EmekliMi ? "Evet" : "Hayır")</td>
+                    </tr>
+                    <tr>
+                        <th>Engel Durumu</th>
+                        <td>@(Model.UserDetail.EngelDurumu ? "Var" : "Yok")</td>
+                    </tr>
+                    <tr>
+                        <th>Afetten Etkilendi Mi</th>
+                        <td>@(Model.UserDetail.AfettenEtkilendiMi ? "Evet" : "Hayır")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+</div>  

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<KariyerPortal.Models.Profile.Language>
+
+<div id="languageListContainer">
+    <form id="languageDeleteForm">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Dil</th>
+                <th>Seviye</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var lang in Model)
+                {
+                    <tr>
+                        <td>@lang.LanguageName</td>
+                        <td>@lang.ProficiencyLevel</td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-sm btn-danger deleteLanguageBtn"
+                                    data-id="@lang.Id">
+                                Sil
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="text-center text-muted">
+                        Henüz eklenmiş dil bilgisi bulunmamaktadır.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.deleteLanguageBtn', function (){
+            var id = $(this).data('id');
+            if (!confirm('Bu dili silmek istediğinize emin misiniz?')) return;
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DeleteLanguage", "Profile")',
+                data: {
+                    id: id,
+                    __RequestVerificationToken: $('#languageDeleteForm input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    $("#languageListContainer").html(response);
+                },
+                error: function () {
+                    alert("Silme işlemi sırasında bir hata oluştu!");
+                }
+            });
+        });
+    </script>
+}

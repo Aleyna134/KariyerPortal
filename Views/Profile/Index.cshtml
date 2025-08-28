@@ -1,132 +1,687 @@
-@using KariyerPortal.Models
+@using KariyerPortal.Models.Profile
 @model AppUser
 
 @{
     ViewData["Title"] = "Profilim";
 }
-<h2 class="profile-heading">@Model.AdSoyad - Özgeçmiş</h2>
 
-<!-- Profil Kartı -->
-<div class="card shadow p-4">
-    <div class="row">
-        <!-- Profil Fotoğrafı -->
-        <div class="col-md-4 text-center border-end">
-            <img src="~/uploads/@(Model.ProfileImagePath ?? "default-profile.png")" class="img-fluid rounded-circle mb-3" style="max-width: 200px;" alt="Profil Fotoğrafı" />
-        </div>
+<div class="container">
 
-        <!-- Bilgiler -->
-        <div class="col-md-8">
-            <h4>@Model.AdSoyad</h4>
-            <div class="row">
-                <div class="col-md-6">
-                    <p><i class="bi bi-calendar3 me-2"></i> @Model.BirthYear</p>
-                    <p><i class="bi bi-geo-alt me-2"></i> @Model.City - @Model.District</p>
+    <h2 class="profile-heading">@Model.AdSoyad - Özgeçmiş</h2>
+
+    <!-- Profil Kartı -->
+    <div class="card shadow p-4 mb-4">
+        <div class="row">
+            <!-- Profil Fotoğrafı -->
+            <div class="col-md-4 text-center border-end">
+                <img src="~/uploads/@(Model.ProfileImagePath ?? "default-profile.png")"
+                     class="img-fluid rounded-circle mb-3"
+                     style="max-width: 200px; object-fit: cover"
+                     alt="Profil Fotoğrafı" />
+            </div>
+
+            <!-- Bilgiler -->
+            <div class="col-md-8">
+                <h4>@Model.AdSoyad</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><i class="bi bi-calendar3 me-2"></i> @Model.BirthYear</p>
+                        <p><i class="bi bi-geo-alt me-2"></i> @Model.City - @Model.District</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><i class="bi bi-envelope me-2"></i>@Model.Email</p>
+                        <p><i class="bi bi-telephone me-2"></i>@Model.Phone</p>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p><i class="bi bi-envelope me-2"></i>@Model.Email</p>
-                    <p><i class="bi bi-telephone me-2"></i>@Model.Phone</p>
+
+
+                <!-- CV Linki -->
+                @if (!string.IsNullOrEmpty(Model.CVPath))
+                {
+                    <p class="mt-2">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Mevcut CV:
+                        <a href="@Url.Content("~/uploads/" + Model.CVPath)" target="_blank" class="fw-bold">
+                            Görüntüle / İndir
+                        </a>
+                    </p>
+                }
+                else
+                {
+                    <p class="mt-2 text-muted">
+                        Henüz CV yüklenmedi.
+                    </p>
+                }
+                <div class="text-end mt-3">
+                    <button id="editBtn" class="btn btn-outline-primary" type="button">
+                        <i class="bi bi-pencil"></i> Düzenle
+                    </button>
                 </div>
             </div>
-            <div class="text-end mt-3">
-                <button id="editBtn" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Düzenle
-                </button>
+        </div>
+    </div>
+
+
+    <!-- PROFİL DÜZENLEME OVERLAY -->
+    <div id="editFormOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+         style="background: rgba(0, 0, 0, 0.7); z-index: 1050;">
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <div class="bg-white p-4 rounded shadow" style="width: 500px;">
+                <form asp-action="Index" asp-controller="Profile" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="AdSoyad" class="form-label">Ad Soyad</label>
+                        <input asp-for="AdSoyad" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label">Telefon</label>
+                        <input asp-for="Phone" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="BirthYear" class="form-label">Doğum Yılı</label>
+                        <input asp-for="BirthYear" type="number" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="City" class="form-label">Şehir</label>
+                        <input asp-for="City" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="District" class="form-label">İlçe</label>
+                        <input asp-for="District" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="ProfileImage" class="form-label">Profil Fotoğrafı</label>
+                        <input type="file" name="ProfileImage" class="form-control" id="ProfileImage" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="CVFile" class="form-label">CV (PDF/DOC/DOCX)</label>
+                        <input type="file" name="CVFile" id="CVFile" class="form-control" accept=".pdf,.doc,.docx" />
+                        @if (!string.IsNullOrEmpty(Model.CVPath))
+                        {
+                            <small class="text-muted">
+                                Mevcut CV: <a href="@Url.Content("~/uploads/" + Model.CVPath)" target="_blank">İndir</a>
+                            </small>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Kaydet</button>
+                        <button type="button" id="cancelEdit" class="btn btn-outline-dark">İptal</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- PROFİL DÜZENLEME OVERLAY -->
-<div id="editFormOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
-     style="background: rgba(0, 0, 0, 0.7); z-index: 1050;">
-    <div class="container h-100 d-flex justify-content-center align-items-center">
-        <div class="bg-white p-4 rounded shadow" style="width: 500px;">
-            <form asp-action="Index" asp-controller="Profile" method="post" enctype="multipart/form-data">
-                @Html.AntiForgeryToken()
-                <div class="mb-3"><label>Ad Soyad</label><input name="AdSoyad" class="form-control" value="@Model.AdSoyad" /></div>
-                <div class="mb-3"><label>Telefon</label><input name="Phone" class="form-control" value="@Model.Phone" /></div>
-                <div class="mb-3"><label>Doğum Yılı</label><input name="BirthYear" type="number" class="form-control" value="@Model.BirthYear" /></div>
-                <div class="mb-3"><label>Şehir</label><input name="City" class="form-control" value="@Model.City" /></div>
-                <div class="mb-3"><label>İlçe</label><input name="District" class="form-control" value="@Model.District" /></div>
-                <div class="mb-3"><label>Profil Fotoğrafı</label><input type="file" name="ProfileImage" class="form-control" /></div>
-                <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-success">Kaydet</button>
-                    <button type="button" id="cancelEdit" class="btn btn-outline-dark">İptal</button>
-                </div>
-            </form>
+
+    <!-- Sekmeler -->
+    <nav>
+        <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-hakkimda-tab" data-bs-toggle="tab" data-bs-target="#nav-hakkimda" type="button" role="tab">Hakkımda</button>
+            <button class="nav-link" id="nav-deneyim-tab" data-bs-toggle="tab" data-bs-target="#nav-deneyim" type="button" role="tab">Deneyim</button>
+            <button class="nav-link" id="nav-egitim-tab" data-bs-toggle="tab" data-bs-target="#nav-egitim" type="button" role="tab">Eğitim</button>
+            <button class="nav-link" id="nav-dil-tab" data-bs-toggle="tab" data-bs-target="#nav-dil" type="button" role="tab">Yabancı Dil</button>
+            <button class="nav-link" id="nav-yetenek-tab" data-bs-toggle="tab" data-bs-target="#nav-yetenek" type="button" role="tab">Yetenekler</button>
+            <button class="nav-link" id="nav-sertifika-tab" data-bs-toggle="tab" data-bs-target="#nav-sertifika" type="button" role="tab">Sertifika</button>
+            <button class="nav-link" id="nav-proje-tab" data-bs-toggle="tab" data-bs-target="#nav-proje" type="button" role="tab">Proje</button>
         </div>
-    </div>
-</div>
+    </nav>
 
-<!-- TABLI YAPI -->
-<div class="container py-4">
-    <ul class="nav nav-pills mb-3" id="profile-tab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="about-tab" data-bs-toggle="pill" data-bs-target="#about" type="button" role="tab">Hakkımda</button>
-        </li>
-    </ul>
+    <div class="tab-content p-3 border bg-light" id="nav-tabContent">
+        <!-- Hakkımda Sekmesi -->
+        <div class="tab-pane fade" id="nav-hakkimda" role="tabpanel">
+            <h3>Hakkımda</h3>
 
-    <div class="tab-content" id="profile-tabContent">
-        <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
-            <!-- BAŞLIK VE EKLE -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>Hakkımda Bilgilerim</h5>
-                <button class="btn btn-sm btn-primary" id="openAboutForm">Ekle</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserDetailModal">
+                Bilgileri Düzenle
+            </button>
+            <br /><br />
+
+            <div id="userDetailListContainer">
+                @await Html.PartialAsync("_UserDetailListPartial", Model.UserDetail)
             </div>
 
-            <!-- Hakkımda Kartları -->
-            <div class="row" id="aboutCards">
-                <div class="col-md-4 mb-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <p class="card-text">Yazılım geliştirmeye ilgi duyuyorum. Özellikle .NET ve C# ile web projeleri geliştiriyorum.</p>
+            <!-- Hakkımda Modal -->
+            <div class="modal fade" id="addUserDetailModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Hakkımda Bilgilerini Düzenle</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            @await Html.PartialAsync("_AddUserDetailPartial", Model.UserDetail ?? new UserDetail { AppUserId = Model.Id })
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- HAKKIMDA EKLE OVERLAY -->
-<div id="aboutFormOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
-     style="background: rgba(0, 0, 0, 0.7); z-index: 1060;">
-    <div class="container h-100 d-flex justify-content-center align-items-center">
-        <div class="bg-white p-4 rounded shadow" style="width: 500px;">
-            <form method="post" asp-action="HakkimdaEkle" asp-controller="UserDetail">
-                @Html.AntiForgeryToken()
-                <div class="mb-3">
-                    <label>Hakkımda</label>
-                    <textarea name="Aciklama" class="form-control" rows="5"></textarea>
+
+        <!-- Deneyim -->
+        <div class="tab-pane fade" id="nav-deneyim" role="tabpanel">
+            <h3>İş Deneyimlerim</h3>
+
+            @if (Model.UserJobExperiences == null || !Model.UserJobExperiences.Any())
+            {
+                <div class="d-flex justify-content-between align-items-center">
+                    <p>Henüz iş deneyimi eklenmemiş.</p>
+                    <button id="addJobBtn" class="btn btn-primary">İş Deneyimi Ekle</button>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-success">Kaydet</button>
-                    <button type="button" id="cancelAbout" class="btn btn-outline-dark">İptal</button>
+            }
+            else
+            {
+                <div class="d-flex justify-content-start mb-2">
+                    <button id="addJobBtn" class="btn btn-primary">Yeni İş Deneyimi Ekle</button>
                 </div>
-            </form>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Pozisyon</th>
+                                <th>Firma Adı</th>
+                                <th>Başlangıç Tarihi</th>
+                                <th>Bitiş Tarihi</th>
+                                <th style="width:120px;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var job in Model.UserJobExperiences)
+                            {
+                                <tr>
+                                    <td>@job.Position</td>
+                                    <td>@job.CompanyName</td>
+                                <td>
+                                    @(job.StartDate.ToString("dd.MM.yyyy") )
+                                </td>
+                                    <td>@(job.EndDate.HasValue? job.EndDate.Value.ToString("dd.MM.yyyy") : "-")</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm editJobBtn" data-id="@job.Id">Düzenle</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <!-- İş Deneyimi Modal -->
+            <div id="jobModal" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+                 style="background: rgba(0,0,0,0.7); z-index: 1050;">
+                <div class="container h-100 d-flex justify-content-center align-items-center">
+                    <div class="bg-white p-4 rounded shadow" style="width: 500px; position: relative;">
+                        <button id="closeJobModalBtn" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"></button>
+                        <form id="jobForm" asp-action="AddOrUpdateJob" asp-controller="Profile" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Id" id="jobId" value="0" />
+
+                            <div class="mb-3">
+                                <label for="Position" class="form-label">Pozisyon</label>
+                                <input type="text" name="Position" id="Position" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="CompanyName" class="form-label">Firma Adı</label>
+                                <input type="text" name="CompanyName" id="CompanyName" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="StartDate" class="form-label">Başlangıç Tarihi</label>
+                                <input type="date" name="StartDate" id="StartDate" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="EndDate" class="form-label">Bitiş Tarihi</label>
+                                <input type="date" name="EndDate" id="EndDate" class="form-control" />
+                                <small class="text-muted">Boş bırakılırsa halen çalışıyor varsayılır.</small>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success">Kaydet</button>
+                                <button type="button" id="cancelJobBtn" class="btn btn-outline-dark">İptal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yabancı Dil -->
+        <div class="tab-pane fade" id="nav-dil" role="tabpanel">
+            <h3>Yabancı Diller</h3>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLanguageModal">
+                    Yabancı Dil Ekle
+                </button>
+            </div>
+
+            <div id="languageList">
+                @await Html.PartialAsync("_LanguageListPartial", Model.Languages)
+            </div>
+
+            <!-- Dil Ekle Modal -->
+            <div class="modal fade" id="addLanguageModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Dil Ekle</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            @await Html.PartialAsync("_AddLanguagePartial", new Language())
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yetenekler -->
+        <div class="tab-pane fade" id="nav-yetenek" role="tabpanel">
+            <h3>Yetenekler</h3>
+
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSkillModal">
+                Yetenek Ekle
+            </button>
+            <br><br />
+            <div id="skillListContainer">
+                @await Html.PartialAsync("_SkillListPartial", Model.Skills)
+            </div>
+
+
+            @await Html.PartialAsync("_AddSkillPartial")
+        </div>
+
+
+        <div class="tab-pane fade" id="nav-egitim" role="tabpanel">
+            <h3>Eğitimler</h3>
+
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEducationModal">
+                Eğitim Ekle
+            </button>
+            <br /><br />
+            <div id="educationListContainer">
+                @await Html.PartialAsync("_EducationListPartial", Model.Educations)
+            </div>
+
+            <!-- Education Modal -->
+            <div class="modal fade" id="addEducationModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Eğitim Ekle</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            @await Html.PartialAsync("_AddEducationPartial", new KariyerPortal.Models.Education())
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="tab-pane fade" id="nav-sertifika" role="tabpanel">
+            <h3>Sertifikalar</h3>
+      
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCertificateModal">
+                Sertifika Ekle
+            </button>
+            <br> <br/>
+            <div id="certificateListContainer">
+                @await Html.PartialAsync("_CertificateListPartial", Model.Certificates)
+            </div>
+        </div>
+
+        <!-- Sertifika Modal -->
+        <div class="modal fade" id="addCertificateModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sertifika Ekle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @await Html.PartialAsync("_AddCertificatePartial", new KariyerPortal.Models.Profile.Certificate())
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="nav-proje" role="tabpanel">
+            <h3>Projeler</h3>
+
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+                Proje Ekle
+            </button>
+            <br> <br />
+
+            <div id="projectListContainer">
+                @await Html.PartialAsync("_ProjectListPartial", Model.Projects)
+            </div>
+        </div>
+
+        <!-- Proje Modal -->
+        <div class="modal fade" id="addProjectModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Proje Ekle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @await Html.PartialAsync("_AddProjectPartial", new KariyerPortal.Models.Profile.Project())
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+<!-- Yetenek Ekle Modal (Eksikti: Eklendi) -->
+<div class="modal fade" id="addSkillModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yetenek Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSkillForm" method="post" action="@Url.Action("AddSkill", "Profile")">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="SkillName" class="form-label">Yetenek Adı</label>
+                        <input type="text" id="SkillName" name="Name" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="SkillLevel" class="form-label">Seviye (0-100)</label>
+                        <input type="number" id="SkillLevel" name="Level" min="0" max="100" class="form-control" />
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success">Ekle</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- SCRIPT -->
 @section Scripts {
     <script>
-        // Profil düzenleme overlay
-        document.getElementById("editBtn")?.addEventListener("click", () => {
-            document.getElementById("editFormOverlay")?.classList.remove("d-none");
-        });
+        $(function () {
+            // -------- Profil düzenleme overlay --------
+            $("#editBtn").on("click", function () {
+                $("#editFormOverlay").removeClass("d-none");
+            });
+            $("#cancelEdit").on("click", function () {
+                $("#editFormOverlay").addClass("d-none");
+            });
 
-        document.getElementById("cancelEdit")?.addEventListener("click", () => {
-            document.getElementById("editFormOverlay")?.classList.add("d-none");
-        });
+            // -------- İş Deneyimi (Job) --------
+            function openJobModal(data) {
+                $("#jobModal").removeClass("d-none");
 
-        // Hakkımda overlay
-        document.getElementById("openAboutForm")?.addEventListener("click", () => {
-            document.getElementById("aboutFormOverlay")?.classList.remove("d-none");
-        });
+                if (data) {
+                    $("#jobId").val(data.id || 0);
+                    $("#Position").val(data.position || "");
+                    $("#CompanyName").val(data.companyName || "");
+                    $("#StartDate").val(data.startDate ? data.startDate.substring(0, 10) : "");
+                    $("#EndDate").val(data.endDate ? data.endDate.substring(0, 10) : "");
+                } else {
+                    $("#jobId").val(0);
+                    $("#Position").val("");
+                    $("#CompanyName").val("");
+                    $("#StartDate").val("");
+                    $("#EndDate").val("");
+                }
+            }
 
-        document.getElementById("cancelAbout")?.addEventListener("click", () => {
-            document.getElementById("aboutFormOverlay")?.classList.add("d-none");
+            $("#addJobBtn").on("click", function () { openJobModal(); });
+
+            $(document).on("click", ".editJobBtn", function () {
+                const tr = $(this).closest("tr")[0];
+                const startText = tr.children[2].innerText.trim();
+                const endText = tr.children[3].innerText.trim();
+
+                const data = {
+                    id: $(this).data("id"),
+                    position: tr.children[0].innerText,
+                    companyName: tr.children[1].innerText,
+                    startDate: startText ? startText.split('.').reverse().join('-') : "",
+                    endDate: (endText && endText !== '-') ? endText.split('.').reverse().join('-') : ""
+                };
+                openJobModal(data);
+            });
+
+            $("#closeJobModalBtn, #cancelJobBtn").on("click", function () {
+                $("#jobModal").addClass("d-none");
+            });
+
+            // -------- Yabancı Dil --------
+            var languageModalEl = document.getElementById('addLanguageModal');
+            var languageModal = languageModalEl ? new bootstrap.Modal(languageModalEl) : null;
+
+            $(document).on("submit", "#addLanguageForm", function (e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr("method") || "POST",
+                    url: form.attr("action"),
+                    data: form.serialize(),
+                    success: function (response) {
+                        $("#languageList").html(response);
+                        if (languageModal) languageModal.hide();
+                        form[0].reset();
+                        $(".modal-backdrop").remove();
+                        $("body").removeClass("modal-open").css("overflow", "auto");
+                    },
+                    error: function () { alert("Bir hata oluştu!"); }
+                });
+            });
+
+            $(document).on("click", ".deleteLanguageBtn", function () {
+                var id = $(this).data("id");
+                if (!confirm("Bu dili silmek istediğinize emin misiniz?")) return;
+                var token = $('input[name="__RequestVerificationToken"]').first().val();
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteLanguage", "Profile")',
+                    data: { id: id, __RequestVerificationToken: token },
+                    success: function (response) {
+                        $("#languageList").html(response);
+                    },
+                    error: function () { alert("Silme işlemi sırasında bir hata oluştu!"); }
+                });
+            });
+
+            // -------- Yetenekler --------
+            var skillModalEl = document.getElementById('addSkillModal');
+            var skillModal = new bootstrap.Modal(skillModalEl);
+
+            $(document).on('submit', '#addSkillForm', function (e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (html) {
+                        $('#skillListContainer').html(html);
+                        form[0].reset();
+                        skillModal.hide();
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('overflow', 'auto');
+                    },
+                    error: function () { alert('Bir hata oluştu!'); }
+                });
+            });
+
+            $(document).on('click', '.deleteSkillBtn', function () {
+                var id = $(this).data('id');
+                if (!confirm('Bu yeteneği silmek istediğinize emin misiniz?')) return;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Profile/DeleteSkill',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').first().val()
+                    },
+                    success: function (html) { $('#skillListContainer').html(html); },
+                    error: function () { alert('Silme sırasında hata oluştu!'); }
+                });
+            });
+
+            // -------- Sertifika --------
+            var certModalEl = document.getElementById('addCertificateModal');
+            var certModal = certModalEl ? new bootstrap.Modal(certModalEl) : null;
+
+            $(document).on('submit', '#addCertificateForm', function (e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (html) {
+                        $('#certificateListContainer').html(html);
+                        if (certModal) certModal.hide();
+                        form[0].reset();
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('overflow', 'auto');
+                    },
+                    error: function () { alert('Bir hata oluştu!'); }
+                });
+            });
+
+            $(document).on('click', '.deleteCertificateBtn', function () {
+                var id = $(this).data('id');
+                if (!confirm('Bu sertifikayı silmek istediğinize emin misiniz?')) return;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteCertificate", "Profile")',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').first().val()
+                    },
+                    success: function (html) { $('#certificateListContainer').html(html); },
+                    error: function () { alert('Silme sırasında hata oluştu!'); }
+                });
+            });
+
+            // -------- Projeler --------
+            $(document).on('submit', '#addProjectForm', function (e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (html) {
+                        $('#projectListContainer').html(html);
+                        $('#addProjectModal').modal('hide');
+                        form[0].reset();
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('overflow', 'auto');
+                    },
+                    error: function () { alert('Bir hata oluştu!'); }
+                });
+            });
+
+            $(document).on('click', '.deleteProjectBtn', function () {
+                var id = $(this).data('id');
+                if (!confirm('Bu projeyi silmek istediğinize emin misiniz?')) return;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteProject", "Profile")',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').first().val()
+                    },
+                    success: function (html) { $('#projectListContainer').html(html); },
+                    error: function () { alert('Silme sırasında hata oluştu!'); }
+                });
+            });
+
+            // -------- Eğitim --------
+            $(document).on("submit", "#addEducationForm", function (e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr("method"),
+                    url: form.attr("action"),
+                    data: form.serialize(),
+                    success: function (html) {
+                        $("#educationListContainer").html(html);
+                        $("#addEducationModal").modal("hide");
+                        form[0].reset();
+                        $(".modal-backdrop").remove();
+                        $("body").removeClass("modal-open").css("overflow", "auto");
+                    },
+                    error: function () { alert("Bir hata oluştu!"); }
+                });
+            });
+
+            $(document).on("click", ".deleteEducationBtn", function () {
+                var id = $(this).data("id");
+                if (!confirm("Bu eğitimi silmek istediğinize emin misiniz?")) return;
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteEducation", "Profile")',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').first().val()
+                    },
+                    success: function (html) { $("#educationListContainer").html(html); },
+                    error: function () { alert("Silme sırasında hata oluştu!"); }
+                });
+            });
+
+            // -------- Hakkımda (UserDetail) --------
+            $(document).on("submit", "#addUserDetailForm", function (e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr("action"),
+                    data: form.serialize(),
+                    success: function (html) {
+                        $("#userDetailListContainer").html(html);
+                        $("#addUserDetailModal").modal("hide");
+                        form[0].reset();
+                        $(".modal-backdrop").remove();
+                        $("body").removeClass("modal-open").css("overflow", "auto");
+                    },
+                    error: function (xhr) {
+                        alert("Bir hata oluştu! Status: " + xhr.status);
+                    }
+                });
+            });
+
+            $('#nav-hakkimda').on('shown.bs.tab', function () {
+                var container = $("#userDetailListContainer");
+                if (!container.data('loaded')) {
+                    $.get('/Profile/UserDetailPartial', function (html) {
+                        container.html(html);
+                        container.data('loaded', true);
+                    });
+                }
+            });
         });
     </script>
 }
+

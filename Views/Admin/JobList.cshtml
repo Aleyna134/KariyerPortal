@@ -1,52 +1,86 @@
-@model IEnumerable<KariyerPortal.Models.Job>
+@using KariyerPortal.Models.Entity
+@model IEnumerable<Job>
 
 @{
     ViewData["Title"] = "Admin Panel";
 }
 
-<h2>İLANLAR</h2>
+<div class="container">
+    <h2>İLANLAR</h2>
 
-@if (User.IsInRole("Admin"))
-{
-    <a asp-controller="Job" asp-action="Create" class="btn btn-success mt-3 mb-4">
-        + İlan Ver
-    </a>
-}
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Job" asp-action="Create" class="btn btn-success mt-3 mb-4">
+            + İlan Ver
+        </a>
+    }
 
-@foreach (var job in Model)
-{
-    <div class="card mb-4">
-        <div class="card-header">
-            <strong>@job.Title</strong> - Yayınlayan: @job.CreatedBy
-        </div>
-        <div class="card-body">
-            <p>@job.Description</p>
-
-            <h6 style="color:navy;">Başvurular (@(job.Applications?.Count() ?? 0) )</h6>
-            <ul>
-                @if (job.Applications != null && job.Applications.Any())
-                {
-                    @foreach (var app in job.Applications)
+    @foreach (var job in Model)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="row g-0">
+                @* Sol kısım: Logo *@
+                <div class="col-md-2 d-flex align-items-center justify-content-center bg-light">
+                    @if (!string.IsNullOrEmpty(job.CompanyLogoPath))
                     {
-                        <li>
-                            Kullanıcı ID: @app.UserId - Başvuru Tarihi: @app.AppliedAt.ToShortDateString()
-                            <br />
-                            <a href="~/uploads/@app.CVPath" target="_blank">CV'yi Görüntüle</a>
-                        </li>
+                        <img src="@job.CompanyLogoPath" alt="Şirket Logosu" class="img-fluid p-2" style="max-height:100px; object-fit:contain;" />
                     }
-                }
-                else
-                {
-                    <li>Henüz başvuru yapılmamış.</li>
-                }
-            </ul>
-            <!-- Silme butonu -->
-            <form asp-action="DeleteJob" asp-controller="Admin" asp-route-id="@job.Id"
-                  method="post" onsubmit="return confirm('Bu ilanı silmek istediğinize emin misiniz?');"
-                  class="position-absolute bottom-0 end-0 m-3">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-sm btn-danger">Sil</button>
-            </form>
+                    else
+                    {
+                        <span class="text-muted">Logo Yok</span>
+                    }
+                </div>
+
+                @* Sağ kısım: Bilgiler ve butonlar *@
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <h5 class="card-title">@job.Title</h5>
+                        <p class="mb-1"><strong>Şirket:</strong> @job.CompanyName</p>
+                        <p class="mb-1"><strong>Lokasyon:</strong> @job.Location</p>
+                        <p class="mb-1"><strong>Çalışma Şekli:</strong> @job.JobType</p>
+                        <p class="text-muted mb-2"><small>Başvurular: @(job.Applications?.Count() ?? 0)</small></p>
+
+                        @* Başvuranları aç-kapa butonu *@
+                        <button class="btn btn-sm btn-secondary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#applications-@job.Id" aria-expanded="false" aria-controls="applications-@job.Id">
+                            Başvuranları Göster / Gizle
+                        </button>
+
+                        <div class="collapse" id="applications-@job.Id">
+                            @if (job.Applications != null && job.Applications.Any())
+                            {
+                                <ul class="list-unstyled">
+                                    @foreach (var app in job.Applications)
+                                    {
+                                        <li class="mb-2">
+                                            <strong>@app.User.AdSoyad</strong> (@app.User.Email)<br />
+                                            Başvuru Tarihi: @app.AppliedAt.ToShortDateString()<br />
+                                            <a href="~/uploads/@app.CVPath" target="_blank" class="btn btn-secondary btn-sm">CV'yi Görüntüle</a> |
+                                            <a asp-controller="Admin" asp-action="ApplicationDetail" asp-route-applicationId="@app.Id" class="btn btn-primary btn-sm">Profili Görüntüle</a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted">Henüz başvuru yapılmamış.</p>
+                            }
+                        </div>
+
+                        @* Detaylar ve Silme butonları *@
+                        <div class="d-flex mt-2">
+                            <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id" class="btn btn-warning btn-sm me-2">
+                                Detaylar
+                            </a>
+
+                            <form asp-action="DeleteJob" asp-controller="Admin" asp-route-id="@job.Id"
+                                  method="post" onsubmit="return confirm('Bu ilanı silmek istediğinize emin misiniz?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger">İlanı Sil</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-}
+    }
+</div>  

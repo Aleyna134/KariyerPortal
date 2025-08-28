@@ -1,0 +1,35 @@
+﻿@model IEnumerable<KariyerPortal.Models.Profile.Certificate>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Sertifika Adı</th>
+                <th>Kurum</th>
+                <th>Alış Tarihi</th>
+                <th>Son Kullanma Tarihi</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cert in Model)
+            {
+                <tr>
+                    <td>@cert.CertificateName</td>
+                    <td>@cert.Institution</td>
+                    <td>@cert.IssueDate.ToString("dd.MM.yyyy")</td>
+                    <td>@(cert.ExpirationDate.HasValue? cert.ExpirationDate.Value.ToString("dd.MM.yyyy") : "-")</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm deleteCertificateBtn" data-id="@cert.Id">Sil</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Henüz sertifika eklenmemiş.</p>
+}
+
